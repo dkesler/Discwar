@@ -1,0 +1,126 @@
+<head>
+	<script src="static/jquery.js" type="text/javascript"></script>
+	<script src="static/utils.js" type="text/javascript"></script>
+	<script src="static/physics.js" type="text/javascript"></script>
+	<script src="static/controls.js" type="text/javascript"></script>
+	<script src="static/graphics.js" type="text/javascript"></script>
+	<script src="static/math.js" type="text/javascript"></script>
+	<script src="static/discwar.js" type="text/javascript"></script>
+	<script src="static/settings.js" type="text/javascript"></script>
+
+	<script type="text/javascript">
+
+		function onGameEnd() {
+			running = false;
+			$("#player0Type").attr("disabled", false);
+			$("#player1Type").attr("disabled", false);
+			$("#player0Server").attr("disabled", false);
+			$("#player1Server").attr("disabled", false);
+		}
+
+		function getImg(p) {
+			return $("#" + p.type + "Img").val();
+		}
+
+		function onGameStart() {
+			collidableObjects = [];
+			keys = {
+				'player0' : {'u' : false, 'd' : false, 'r' : false, 'l' : false, 's' : false},
+				'player1' : {'u' : false, 'd' : false, 'r' : false, 'l' : false, 's' : false}
+			};
+
+			$("#player0Type").attr("disabled", true);
+			$("#player0Server").attr("disabled", true);
+			$("#player1Type").attr("disabled", true);
+			$("#player1Server").attr("disabled", true);
+			collidableObjects = [];
+			var p1 = {'type' : 'player0', 'mass' : 1, 'radius' : playerRadius, 'x' : maxWidth/2 + 50, 'y' : maxHeight/2 + 50, 'color' : 'rgb(227,25,25)', 'maxAcc' : 1, 'maxVel' : maxVel, 'v' : {'r' : 0, 'th' : 0}, 'a' : {'r' : 0, 'th' : 0}};
+			var p2 = {'type' : 'player1', 'mass' : 1, 'radius' : playerRadius, 'x' : maxWidth/2 - 50, 'y' : maxHeight/2 - 50, 'color' : 'rgb(24,17,168)', 'maxAcc' : 1, 'maxVel' : maxVel, 'v' : {'r' : 0, 'th' : 0}, 'a' : {'r' : 0, 'th' : 0}};
+			p1.accelMethod = getAccelMethod(p1);
+			p2.accelMethod = getAccelMethod(p2);
+			p1.img = getImg(p1);
+			p2.img = getImg(p2);
+			collidableObjects.push(p1);
+			collidableObjects.push(p2);
+			running = true;
+			window.webkitRequestAnimationFrame(drawFrame);
+		}
+
+	</script>
+
+	<style type="text/css">
+		canvas { border: 1px solid black; }
+	</style>
+</head>
+
+<body>
+	<canvas id="game" width="800" height="800" >
+		Fallback
+	</canvas>
+	<br />
+
+	<label for="player0Type">Player 1:</label>
+	<select id="player0Type">
+		<option value="Manual">Manual - WASD to move, F to stop</option>
+		<option value="AggressiveJS">Aggressive Javascript</option>
+		<option value="DodgerJS">Dodger Javascript</option>
+		<option value="CenterJS">Center Holder Javascript</option>
+		<option value="ServerAi">Server Ai</option>
+	</select>
+	<select id="player0Img">
+		<option value="dk">David Kesler</option>
+		<option value="md">Mark Drago</option>
+		<option value="dj">David Judd</option>
+		<option value="dg">Dan Gant</option>
+		<option value="dl">Dennis Lipovsky</option>
+		<option value="dh">Donald Higgins</option>
+	</select>
+	<input id="player0Server" value="http://localhost:8000/discwar/aggressive" style="width:400px"></input>
+	<br />
+
+	<label for="player1Type">Player 2:</label>
+	<select id="player1Type">
+		<option value="Manual">Manual - Arrow Keys to move, M to stop</option>
+		<option value="AggressiveJS">Aggressive Javascript</option>
+		<option value="DodgerJS">Dodger Javascript</option>
+		<option value="CenterJS">Center Holder Javascript</option>
+		<option value="ServerAi">Server Ai</option>
+	</select>
+	<select id="player1Img">
+		<option value="dk">David Kesler</option>
+		<option value="md">Mark Drago</option>
+		<option value="dj">David Judd</option>
+		<option value="dg">Dan Gant</option>
+		<option value="dl">Dennis Lipovsky</option>
+		<option value="dh">Donald Higgins</option>
+	</select>
+	<input id="player1Server" value="http://localhost:8000/discwar/aggressive" style="width:400px"></input>
+	<br />
+
+	<button id="start">Start</button>
+	<button id="end">Stop</button>
+
+	<script type="text/javascript">
+
+		$(document).ready(
+		new function() {
+			init();
+			$("body").keydown(handleKeydown);
+			$("body").keyup(handleKeyup);
+
+			loadImages();
+
+			$("#start").click(
+				function() {
+					if (!running) {
+						onGameStart();
+					}
+				}
+			);
+
+			$("#end").click(
+				onGameEnd
+			);
+		});
+	</script>
+</body>
