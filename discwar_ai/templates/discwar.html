@@ -10,20 +10,22 @@
 
 	<script type="text/javascript">
 
-		function onGameEnd() {
-			running = false;
-			$("#player0Type").attr("disabled", false);
-			$("#player1Type").attr("disabled", false);
-			$("#player0Server").attr("disabled", false);
-			$("#player1Server").attr("disabled", false);
-		}
-
-		function getImg(p) {
-			return $("#" + p.type + "Img").val();
-		}
+	  function onGameEnd() {
+	      running = false;
+	      $("#player0Type").attr("disabled", false);
+	      $("#player1Type").attr("disabled", false);
+	      $("#player0Server").attr("disabled", false);
+	      $("#player1Server").attr("disabled", false);
+	  }
+	  
+	  function getImg(p) {
+	      return $("#" + p.type + "Img").val();
+	  }
 
 		function onGameStart() {
 			collidableObjects = [];
+	                outstanding.player0 = false;
+	                outstanding.player1 = false;
 			keys = {
 				'player0' : {'u' : false, 'd' : false, 'r' : false, 'l' : false, 's' : false},
 				'player1' : {'u' : false, 'd' : false, 'r' : false, 'l' : false, 's' : false}
