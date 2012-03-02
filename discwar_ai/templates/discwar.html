@@ -10,6 +10,12 @@
 
 	<script type="text/javascript">
 
+	  var images = [
+	  {% for avatar in avatars %}
+	  'static/{{avatar}}',
+	  {% endfor %}
+	  ];
+
 	  function onGameEnd() {
 	      running = false;
 	      $("#player0Type").attr("disabled", false);
@@ -70,12 +76,6 @@
 		<option value="ServerAi">Server Ai</option>
 	</select>
 	<select id="player0Img">
-		<option value="dk">David Kesler</option>
-		<option value="md">Mark Drago</option>
-		<option value="dj">David Judd</option>
-		<option value="dg">Dan Gant</option>
-		<option value="dl">Dennis Lipovsky</option>
-		<option value="dh">Donald Higgins</option>
 	</select>
 	<input id="player0Server" value="http://localhost:8000/discwar/aggressive" style="width:400px"></input>
 	<br />
@@ -89,12 +89,6 @@
 		<option value="ServerAi">Server Ai</option>
 	</select>
 	<select id="player1Img">
-		<option value="dk">David Kesler</option>
-		<option value="md">Mark Drago</option>
-		<option value="dj">David Judd</option>
-		<option value="dg">Dan Gant</option>
-		<option value="dl">Dennis Lipovsky</option>
-		<option value="dh">Donald Higgins</option>
 	</select>
 	<input id="player1Server" value="http://localhost:8000/discwar/aggressive" style="width:400px"></input>
 	<br />
@@ -103,6 +97,12 @@
 	<button id="end">Stop</button>
 
 	<script type="text/javascript">
+	  
+	  function setAvatars(select) {
+              for (img in images) {
+	          select.append("<option value='" + img + "'>" + images[img] + "</option>");
+	      }
+          }
 
 	  $(document).ready(
 	  new function() {
@@ -112,6 +112,9 @@
 
 	  $("#player0Server").val(window.location.href + "/aggressive");
 	  $("#player1Server").val(window.location.href + "/aggressive");
+
+	  setAvatars($("#player0Img"));
+	  setAvatars($("#player1Img"));
 	  
 	  loadImages();
 	  

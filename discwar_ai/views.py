@@ -1,9 +1,12 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.template import Context, Template
+from django.shortcuts import render_to_response
 import json
 import math
 import time
 import random
+import os
 
 class cart(object):
 	def __init__(self, x, y):
@@ -66,3 +69,11 @@ def polToCart(p):
 	y = p.r * math.sin(p.th)
 	
 	return {'x' : x, 'y' : y}
+
+
+def loadGame(request):
+	avatars = os.listdir(os.path.join(os.path.dirname(__file__), "avatars"));
+	c = Context({"avatars" : avatars});
+	return render_to_response('discwar.html', c);
+
+	

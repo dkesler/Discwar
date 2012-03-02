@@ -1,13 +1,4 @@
-var images = {
-	'dk' : {'src' : 'static/david_kesler.png'},
-	'md' : {'src' : 'static/mark_drago.png'},
-	'dg' : {'src' : 'static/dan_gant.png'},
-	'dj' : {'src' : 'static/david_judd.png'},
-	'dh' : {'src' : 'static/donald_higgins.png'},
-	'dl' : {'src' : 'static/dennis_lipovsky.png'}
-}
-
-var loaded_images = {};
+var loaded_images = [];
 
 function init() {
 	var game = document.getElementById("game");
@@ -36,6 +27,6 @@ function drawBoard() {
 function loadImages() {
 	for (img in images) {
 		loaded_images[img] = new Image();
-		loaded_images[img].src = images[img].src;
+		loaded_images[img].src = images[img];
 	}
 }
