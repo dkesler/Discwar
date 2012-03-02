@@ -95,10 +95,17 @@ function aggressiveAi(me, all) {
 
 function dodgerAi(me, all) {
 	var p2 = getOtherPlayer(me, all);
-	var towardsEnemy = cartToPol({'x' : p2.x - me.x, 'y' : p2.y - me.y}).th;
-	var orthogonal = towardsEnemy + Math.PI/2;
-	if (orthogonal > 2*Math.PI) orthogonal -= 2*Math.PI
-	me.a = {'r' : 1, 'th' : orthogonal - Math.PI/10 + Math.random()*Math.PI/5};
+	var towardsEnemy = cartToPol({'x' : p2.x - me.x, 'y' : p2.y - me.y});
+	var towardsCenter = cartToPol({'x' : maxWidth/2 - me.x, 'y' : maxHeight/2 - me.y});
+	if (towardsEnemy.r > boardRadius/2 || towardsCenter.r > boardRadius/2) {
+	    centerAi(me, all);
+	} else {
+	    var sideToFavor = sign(- towardsEnemy.th + towardsCenter.th);
+	    if (sideToFavor == 0) sideToFavor = 1;
+	    var orthogonal = towardsEnemy.th + sideToFavor * Math.PI/2;
+	    if (orthogonal > 2*Math.PI) orthogonal -= 2*Math.PI;
+	    me.a = {'r' : 1, 'th' : orthogonal - Math.PI/10 + Math.random()*Math.PI/5};
+	}
 }
 
 function centerAi(me, all) {
