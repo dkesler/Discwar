@@ -102,25 +102,28 @@
 
 	<script type="text/javascript">
 
-		$(document).ready(
-		new function() {
-			init();
-			$("body").keydown(handleKeydown);
-			$("body").keyup(handleKeyup);
+	  $(document).ready(
+	  new function() {
+	  init();
+	  $("body").keydown(handleKeydown);
+	  $("body").keyup(handleKeyup);
 
-			loadImages();
-
-			$("#start").click(
-				function() {
-					if (!running) {
-						onGameStart();
-					}
-				}
-			);
-
-			$("#end").click(
-				onGameEnd
-			);
-		});
+	  $("#player0Server").val(window.location.href + "/aggressive");
+	  $("#player1Server").val(window.location.href + "/aggressive");
+	  
+	  loadImages();
+	  
+	  $("#start").click(
+	  function() {
+	  if (!running) {
+	  onGameStart();
+	  }
+	  }
+	  );
+	  
+	  $("#end").click(
+	  onGameEnd
+	  );
+	  });
 	</script>
 </body>
