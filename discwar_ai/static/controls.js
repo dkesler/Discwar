@@ -104,7 +104,7 @@ function dodgerAi(me, all) {
 function centerAi(me, all) {
 	var p2 = getOtherPlayer(me, all);
 	var towardsCenter = cartToPol({'x' : me.x - maxWidth/2, 'y' : me.y - maxWidth/2}).th;
-	p1mea = {'r' : -1, 'th' : towardsCenter};
+	me.a = {'r' : -1, 'th' : towardsCenter};
 }
 
 function straightAccel(p1, all) {
