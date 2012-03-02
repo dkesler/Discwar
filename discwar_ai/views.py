@@ -73,7 +73,11 @@ def polToCart(p):
 
 def loadGame(request):
 	avatars = os.listdir(os.path.join(os.path.dirname(__file__), "avatars"));
-	c = Context({"avatars" : avatars});
-	return render_to_response('discwar.html', c);
+	names = [convertName(a) for a in avatars]
+	c = Context({"avatars" : [{"src" : avatars[i], "name" : names[i]} for i in range(len(avatars))]});
+	return render_to_response('discwar.html', c)
 
-	
+def convertName(a):
+	a = a.split('.')[0]
+	split_a = a.split('_')
+	return split_a[0].capitalize() + " " + split_a[1].capitalize()

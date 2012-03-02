@@ -1,4 +1,4 @@
-var loaded_images = [];
+var loaded_images = {};
 
 function init() {
 	var game = document.getElementById("game");

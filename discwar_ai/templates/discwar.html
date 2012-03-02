@@ -10,11 +10,11 @@
 
 	<script type="text/javascript">
 
-	  var images = [
+	  var images = {
 	  {% for avatar in avatars %}
-	  'static/{{avatar}}',
+	  '{{avatar.name}}' : 'static/{{avatar.src}}',
 	  {% endfor %}
-	  ];
+	  };
 
 	  function onGameEnd() {
 	      running = false;
@@ -100,7 +100,7 @@
 	  
 	  function setAvatars(select) {
               for (img in images) {
-	          select.append("<option value='" + img + "'>" + images[img] + "</option>");
+	          select.append("<option value='" + img + "'>" + img + "</option>");
 	      }
           }
 
