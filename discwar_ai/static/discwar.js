@@ -2,6 +2,15 @@ var running = false;
 var ctx;
 var collidableObjects;
 
+var requestAnimFrame = window.requestAnimationFrame       || 
+    window.webkitRequestAnimationFrame || 
+    window.mozRequestAnimationFrame    || 
+    window.oRequestAnimationFrame      || 
+    window.msRequestAnimationFrame     || 
+    function(callback) {
+        window.setTimeout(callback, 16);
+};
+
 function drawFrame() {
 
 	for (n in collidableObjects) {
@@ -34,9 +43,10 @@ function drawFrame() {
 			drawObject(collidableObjects[n]);
 		}
 
-		window.webkitRequestAnimationFrame(drawFrame);
+		requestAnimFrame(drawFrame);
 	}
 }
+
 
 var framesSinceGeneration = 0;
 function addAndRemoveCollidableObjects() {
