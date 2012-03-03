@@ -40,51 +40,57 @@ function updateAccelerationFromKeys(player, all) {
 }
 
 function handleKeydown(event) {
-	if (event.which == 65) {
-		keys.player0.l = true;
-	} else if (event.which == 68) {
-		keys.player0.r = true;
-	} else if (event.which == 87) {
-		keys.player0.u = true;
-	} else if (event.which == 83) {
-		keys.player0.d = true;
-	} else if (event.which == 70) {
-		keys.player0.s = true;
-	} else if (event.which == 37) {
-		keys.player1.l = true;
-	} else if (event.which == 38) {
-		keys.player1.u = true;
-	} else if (event.which == 39) {
-		keys.player1.r = true;
-	} else if (event.which == 40) {
-		keys.player1.d = true;
-	} else if (event.which == 77) {
-		keys.player1.s = true;
-	}
+    if (keys === undefined || keys.player0 === undefined || keys.player1 === undefined)
+	return;
+
+    if (event.which == 65) {
+	keys.player0.l = true;
+    } else if (event.which == 68) {
+	keys.player0.r = true;
+    } else if (event.which == 87) {
+	keys.player0.u = true;
+    } else if (event.which == 83) {
+	keys.player0.d = true;
+    } else if (event.which == 70) {
+	keys.player0.s = true;
+    } else if (event.which == 37) {
+	keys.player1.l = true;
+    } else if (event.which == 38) {
+	keys.player1.u = true;
+    } else if (event.which == 39) {
+	keys.player1.r = true;
+    } else if (event.which == 40) {
+	keys.player1.d = true;
+    } else if (event.which == 77) {
+	keys.player1.s = true;
+    }
 }
 
 function handleKeyup(event) {
-	if (event.which == 65) {
-		keys.player0.l = false;
-	} else if (event.which == 68) {
-		keys.player0.r = false;
-	} else if (event.which == 87) {
-		keys.player0.u = false;
-	} else if (event.which == 83) {
-		keys.player0.d = false;
-	} else if (event.which == 70) {
-		keys.player0.s = false;
-	} else if (event.which == 37) {
-		keys.player1.l = false;
-	} else if (event.which == 38) {
-		keys.player1.u = false;
-	} else if (event.which == 39) {
-		keys.player1.r = false;
-	} else if (event.which == 40) {
-		keys.player1.d = false;
-	} else if (event.which == 77) {
-		keys.player1.s = false;
-	}
+   if (keys === undefined || keys.player0 === undefined || keys.player1 === undefined)
+	return;
+   
+   if (event.which == 65) {
+       keys.player0.l = false;
+   } else if (event.which == 68) {
+       keys.player0.r = false;
+   } else if (event.which == 87) {
+       keys.player0.u = false;
+   } else if (event.which == 83) {
+       keys.player0.d = false;
+   } else if (event.which == 70) {
+       keys.player0.s = false;
+   } else if (event.which == 37) {
+       keys.player1.l = false;
+   } else if (event.which == 38) {
+       keys.player1.u = false;
+   } else if (event.which == 39) {
+       keys.player1.r = false;
+   } else if (event.which == 40) {
+       keys.player1.d = false;
+   } else if (event.which == 77) {
+       keys.player1.s = false;
+   }
 }
 
 function aggressiveAi(me, all) {
