@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.template import Context, Template
-from django.shortcuts import render_to_response
+from django.template.loader import get_template
 import json
 import math
 import time
@@ -32,7 +32,10 @@ def aggressive(request):
 	except Exception as e:
 		print e
 	else:
-		return HttpResponse(json.dumps({'r' : me['maxAcc'], 'th' : towardsEnemy - math.pi/10 + random.random() * math.pi/5}), mimetype="application/javascript")
+		response = HttpResponse(json.dumps({'r' : me['maxAcc'], 'th' : towardsEnemy - math.pi/10 + random.random() * math.pi/5}), mimetype="application/javascript)")
+		response['Access-Control-Allow-Origin'] = '*'
+		response['Access-Control-Allow-Methods'] = 'POST'
+		return response
 
 def getEnemy(me, all):
 	my_type = me['type']
@@ -41,6 +44,7 @@ def getEnemy(me, all):
 		return getByType(all, "player1");
 	else:
 		return getByType(all, "player0");
+
 
 def getByType(all, type):
 	return [x for x in all if x['type'] == type][0]
@@ -74,8 +78,11 @@ def polToCart(p):
 def loadGame(request):
 	avatars = os.listdir(os.path.join(os.path.dirname(__file__), "avatars"));
 	names = [convertName(a) for a in avatars]
-	c = Context({"avatars" : [{"src" : avatars[i], "name" : names[i]} for i in range(len(avatars))]});
-	return render_to_response('discwar.html', c)
+	d = {"avatars" : [{"src" : avatars[i], "name" : names[i]} for i in range(len(avatars))]}
+	c = Context(d);
+	t = get_template('discwar.html')
+	response = HttpResponse(t.render(c))
+	return response
 
 def convertName(a):
 	a = a.split('.')[0]
