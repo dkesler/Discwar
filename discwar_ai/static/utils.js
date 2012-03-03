@@ -8,6 +8,10 @@ function filterCollidableObjects(element, index, array) {
 	return !isOutOfBoard(element.x, element.y);
 }
 
+function filterOutTakenPowerups(element, index, array) {
+    return !(element.type === 'powerup' && element.takenBy !== undefined);
+}
+
 function getPlayer(player) {
 	return collidableObjects.filter(filterByType(player))[0];
 }

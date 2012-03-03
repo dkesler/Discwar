@@ -22,7 +22,7 @@ function updateAccelerationFromKeys(player, all) {
 		var v = polToCart(player.v);
 		var a = {'x' : -v.x/settings.accelFactor, 'y' : -v.y/settings.accelFactor};
 		player.a = cartToPol(a);
-		if (player.a.r > 1) player.a.r = 1;
+		if (player.a.r > player.maxAcc) player.a.r = player.maxAcc;
 	} else {
 
 		var a = {'x' : 0, 'y' : 0};
@@ -34,7 +34,7 @@ function updateAccelerationFromKeys(player, all) {
 
 		player.a = cartToPol(a);
 
-		if (a.x != 0 || a.y != 0) player.a.r = 1;
+		if (a.x != 0 || a.y != 0) player.a.r = player.maxAcc;
 		else player.a.r = 0;
 	}
 }
@@ -122,6 +122,10 @@ function centerAi(me, all) {
 
 function straightAccel(p1, all) {
 	p1.a = {'r' : p1.maxAcc, 'th' : p1.dir};
+}
+
+function stayStill(p1, all) {
+    p1.a = {'r' : 0, 'th' : 0};
 }
 
 function spiralAccel(p1, all) {

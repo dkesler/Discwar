@@ -19,16 +19,22 @@ function capAcceleration(p) {
 }
 
 function checkForCollisions(p1, p2) {
-	var dist = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
-	if (dist < p1.radius + p2.radius) {
-		var oneToTwo = getCollisionAdjustment(p1, p2);
-		var twoToOne = getCollisionAdjustment(p2, p1);
-
-		p1.a = addPolarVectors(p1.a, oneToTwo, -1 * p2.mass / p1.mass);
-		p1.a = addPolarVectors(p1.a, twoToOne, 1 * p2.mass / p1.mass);
-		p2.a = addPolarVectors(p2.a, oneToTwo, 1 * p1.mass / p2.mass);
-		p2.a = addPolarVectors(p2.a, twoToOne, -1 * p1.mass / p2.mass);
+    var dist = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+    if (dist < p1.radius + p2.radius) {
+	if (p1.type.indexOf('player') == 0 && p2.type == 'powerup') {
+	    p2.takenBy = p1.type;
+	} else if (p1.type == 'powerup' && p2.type.indexOf('player') == 0) {
+	    p1.takenBy = p2.type;
+	} else {
+	    var oneToTwo = getCollisionAdjustment(p1, p2);
+	    var twoToOne = getCollisionAdjustment(p2, p1);
+	    
+	    p1.a = addPolarVectors(p1.a, oneToTwo, -1 * p2.mass / p1.mass);
+	    p1.a = addPolarVectors(p1.a, twoToOne, 1 * p2.mass / p1.mass);
+	    p2.a = addPolarVectors(p2.a, oneToTwo, 1 * p1.mass / p2.mass);
+	    p2.a = addPolarVectors(p2.a, twoToOne, -1 * p1.mass / p2.mass);
 	}
+    }
 }
 
 function getCollisionAdjustment(p1, p2) {
