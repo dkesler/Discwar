@@ -14,7 +14,6 @@ var requestAnimFrame = window.requestAnimationFrame       ||
 function drawFrame() {
     
     for (n in collidableObjects) {
-	collidableObjects[n].accelMethod(collidableObjects[n], collidableObjects);
 	capAcceleration(collidableObjects[n]);
     }
     
@@ -42,6 +41,10 @@ function drawFrame() {
 	
 	for (n in collidableObjects) {
 	    drawObject(collidableObjects[n]);
+	}
+
+	for (n in collidableObjects) {
+	    collidableObjects[n].accelMethod(collidableObjects[n], collidableObjects);
 	}
 	
 	requestAnimFrame(drawFrame);
