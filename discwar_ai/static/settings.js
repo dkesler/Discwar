@@ -1,8 +1,9 @@
-var playerRadius = 30;
-var objectRadius = 10;
-var maxWidth = 800;
-var maxHeight = 800;
-var boardRadius = 350;
-
-var maxVel = 7;
-var accelFactor = .5;
+var settings = {
+    "playerRadius" : 30,
+    "objectRadius" : 10,
+    "maxWidth" : 800,
+    "maxHeight" : 800,
+    "boardRadius" : 350,
+    "maxVel" : 7,
+    "accelFactor" : .5
+}

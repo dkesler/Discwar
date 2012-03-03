@@ -42,8 +42,8 @@
 			$("#player1Type").attr("disabled", true);
 			$("#player1Server").attr("disabled", true);
 			collidableObjects = [];
-			var p1 = {'type' : 'player0', 'mass' : 1, 'radius' : playerRadius, 'x' : maxWidth/2 + 50, 'y' : maxHeight/2 + 50, 'color' : 'rgb(227,25,25)', 'maxAcc' : 1, 'maxVel' : maxVel, 'v' : {'r' : 0, 'th' : 0}, 'a' : {'r' : 0, 'th' : 0}};
-			var p2 = {'type' : 'player1', 'mass' : 1, 'radius' : playerRadius, 'x' : maxWidth/2 - 50, 'y' : maxHeight/2 - 50, 'color' : 'rgb(24,17,168)', 'maxAcc' : 1, 'maxVel' : maxVel, 'v' : {'r' : 0, 'th' : 0}, 'a' : {'r' : 0, 'th' : 0}};
+			var p1 = {'type' : 'player0', 'mass' : 1, 'radius' : settings.playerRadius, 'x' : settings.maxWidth/2 + 50, 'y' : settings.maxHeight/2 + 50, 'color' : 'rgb(227,25,25)', 'maxAcc' : 1, 'maxVel' : settings.maxVel, 'v' : {'r' : 0, 'th' : 0}, 'a' : {'r' : 0, 'th' : 0}};
+			var p2 = {'type' : 'player1', 'mass' : 1, 'radius' : settings.playerRadius, 'x' : settings.maxWidth/2 - 50, 'y' : settings.maxHeight/2 - 50, 'color' : 'rgb(24,17,168)', 'maxAcc' : 1, 'maxVel' : settings.maxVel, 'v' : {'r' : 0, 'th' : 0}, 'a' : {'r' : 0, 'th' : 0}};
 			p1.accelMethod = getAccelMethod(p1);
 			p2.accelMethod = getAccelMethod(p2);
 			p1.img = getImg(p1);

@@ -26,6 +26,7 @@ def aggressive(request):
 	
 		me = json_data['me']
 		all = json_data['all']
+		settings = json_data['settings']
 		them = getEnemy(me, all);
 	
 		towardsEnemy = cartToPol(cart(them['x'] - me['x'], them['y'] - me['y'])).th;

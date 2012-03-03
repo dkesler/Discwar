@@ -20,7 +20,7 @@ function updateAccelerationFromKeys(player, all) {
 	var playerKeys = keys[player.type];
 	if (playerKeys.s) {
 		var v = polToCart(player.v);
-		var a = {'x' : -v.x/accelFactor, 'y' : -v.y/accelFactor};
+		var a = {'x' : -v.x/settings.accelFactor, 'y' : -v.y/settings.accelFactor};
 		player.a = cartToPol(a);
 		if (player.a.r > 1) player.a.r = 1;
 	} else {
@@ -102,8 +102,8 @@ function aggressiveAi(me, all) {
 function dodgerAi(me, all) {
 	var p2 = getOtherPlayer(me, all);
 	var towardsEnemy = cartToPol({'x' : p2.x - me.x, 'y' : p2.y - me.y});
-	var towardsCenter = cartToPol({'x' : maxWidth/2 - me.x, 'y' : maxHeight/2 - me.y});
-	if (towardsEnemy.r > boardRadius/2 || towardsCenter.r > boardRadius/2) {
+	var towardsCenter = cartToPol({'x' : settings.maxWidth/2 - me.x, 'y' : settings.maxHeight/2 - me.y});
+	if (towardsEnemy.r > settings.boardRadius/2 || towardsCenter.r > settings.boardRadius/2) {
 	    centerAi(me, all);
 	} else {
 	    var sideToFavor = sign(- towardsEnemy.th + towardsCenter.th);
@@ -116,7 +116,7 @@ function dodgerAi(me, all) {
 
 function centerAi(me, all) {
 	var p2 = getOtherPlayer(me, all);
-	var towardsCenter = cartToPol({'x' : me.x - maxWidth/2, 'y' : me.y - maxWidth/2}).th;
+	var towardsCenter = cartToPol({'x' : me.x - settings.maxWidth/2, 'y' : me.y - settings.maxWidth/2}).th;
 	me.a = {'r' : -1, 'th' : towardsCenter};
 }
 
@@ -125,7 +125,7 @@ function straightAccel(p1, all) {
 }
 
 function spiralAccel(p1, all) {
-	var towardsEdge = cartToPol({'x' : p1.x - maxWidth/2, 'y' : p1.y - maxHeight/2});
+	var towardsEdge = cartToPol({'x' : p1.x - settings.maxWidth/2, 'y' : p1.y - settings.maxHeight/2});
 	var velTowardsEdge = polToCart({'r' : p1.v.r, 'th' : - p1.v.th + towardsEdge.th}).x;
 	var accelTowardsEdge = {'r' : .25 - velTowardsEdge, 'th' : towardsEdge.th};
 	var orthogonal =  {'r' : 1, 'th' : towardsEdge.th + Math.PI / 2};
@@ -136,17 +136,17 @@ function spiralAccel(p1, all) {
 
 var outstanding = {'player0' : false, 'player1' : false};
 function serverAi(me, all) {
-	if (!outstanding[me.type]) {
-		outstanding[me.type] = true;
-		$.ajax({
-			type: 'POST',
-			url:  $("#" + me.type + "Server").val(),
-			data: JSON.stringify({'me' : me, 'all' : all}),
-			success : function(data) {
-				me.a = data;
-				outstanding[me.type] = false;
-			},
-			dataType : "json"
-		});
-	}
+    if (!outstanding[me.type]) {
+	outstanding[me.type] = true;
+	$.ajax({
+		type: 'POST',
+		url:  $("#" + me.type + "Server").val(),
+		data: JSON.stringify({'me' : me, 'all' : all, 'settings' : settings}),
+		success : function(data) {
+		    me.a = data;
+		    outstanding[me.type] = false;
+		},
+		dataType : "json"
+	});
+    }
 }

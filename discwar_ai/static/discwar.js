@@ -35,7 +35,7 @@ function drawFrame() {
 	if (running) {
 		addAndRemoveCollidableObjects();
 
-		ctx.clearRect(0, 0, maxWidth, maxHeight);
+		ctx.clearRect(0, 0, settings.maxWidth, settings.maxHeight);
 
 		drawBoard();
 
@@ -52,7 +52,7 @@ var framesSinceGeneration = 0;
 function addAndRemoveCollidableObjects() {
 	collidableObjects = collidableObjects.filter(filterCollidableObjects);
 	if (framesSinceGeneration > 120) {
-		collidableObjects.push(initCollidableObject());
+	    collidableObjects.push(initCollidableObject());
 		framesSinceGeneration = 0;
 	} else {
 		framesSinceGeneration += 1;
@@ -60,21 +60,21 @@ function addAndRemoveCollidableObjects() {
 }
 
 function isOutOfBoard(x, y) {
-	return Math.sqrt(Math.pow(x - maxWidth/2, 2) + Math.pow(y - maxHeight/2, 2)) > boardRadius
+	return Math.sqrt(Math.pow(x - settings.maxWidth/2, 2) + Math.pow(y - settings.maxHeight/2, 2)) > settings.boardRadius
 }
 
 function initCollidableObject() {
 	var dir = Math.random() * 2 * Math.PI;
 	var straight = Math.random() > .5;
 	return {
-		'radius' : objectRadius,
+		'radius' : settings.objectRadius,
 		'type' : straight ? 'straight' : 'spiral',
 		'mass' : 2,
-		'x' : maxWidth/2 + 1,
-		'y' : maxHeight/2 + 1,
+		'x' : settings.maxWidth/2 + 1,
+		'y' : settings.maxHeight/2 + 1,
 		'color' : 'rgb(227,200,25)',
 		'maxAcc' : 1,
-		'maxVel' : maxVel,
+		'maxVel' : settings.maxVel,
 		'v' : {'r' : 0, 'th' : dir},
 		'a' : {'r' : 0, 'th' : dir},
 		'accelMethod' : straight ? straightAccel : spiralAccel,
