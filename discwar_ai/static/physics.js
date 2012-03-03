@@ -1,7 +1,7 @@
 function capAcceleration(p) {
 	if (p.a.r > p.maxAcc) p.a.r = p.maxAcc;
 
-	var a_proj_v = polToCart({'r' : p.a.r, 'th' : p.a.th - p.v.th});
+	var a_proj_v = polToCart(pol(p.a.r, p.a.th - p.v.th));
 
 	if (p.v.r >= p.maxVel && a_proj_v.x > 0) {
 	    //If we're already going maxVel in one direction, don't allow further acceleration
@@ -14,7 +14,7 @@ function capAcceleration(p) {
 	}
 
 	a_proj_v = cartToPol(a_proj_v);
-	var new_a = {'r' : a_proj_v.r, 'th' : a_proj_v.th + p.v.th};
+	var new_a = pol(a_proj_v.r, a_proj_v.th + p.v.th);
 	p.a = new_a;
 }
 
@@ -26,29 +26,46 @@ function checkForCollisions(p1, p2) {
 	} else if (p1.type == 'powerup' && p2.type.indexOf('player') == 0) {
 	    p1.takenBy = p2.type;
 	} else {
-	    var oneToTwo = getCollisionAdjustment(p1, p2);
-	    var twoToOne = getCollisionAdjustment(p2, p1);
+	    var oneAdjV = getCollisionVelocityAdjustment(p1, p2);
+	    var twoAdjV = getCollisionVelocityAdjustment(p2, p1);
+	    var oneToTwoA = getCollisionAdjustment(p1, p2);
+	    var twoToOneA = getCollisionAdjustment(p2, p1);
+
+	    p1.v = addPolarVectors(p1.v, oneAdjV, 1);
+	    p2.v = addPolarVectors(p2.v, twoAdjV, 1);
 	    
-	    p1.a = addPolarVectors(p1.a, oneToTwo, -1 * p2.mass / p1.mass);
-	    p1.a = addPolarVectors(p1.a, twoToOne, 1 * p2.mass / p1.mass);
-	    p2.a = addPolarVectors(p2.a, oneToTwo, 1 * p1.mass / p2.mass);
-	    p2.a = addPolarVectors(p2.a, twoToOne, -1 * p1.mass / p2.mass);
+	    p1.a = addPolarVectors(p1.a, oneToTwoA, -1 * p2.mass / p1.mass);
+	    p1.a = addPolarVectors(p1.a, twoToOneA, 1 * p2.mass / p1.mass);
+	    p2.a = addPolarVectors(p2.a, oneToTwoA, 1 * p1.mass / p2.mass);
+	    p2.a = addPolarVectors(p2.a, twoToOneA, -1 * p1.mass / p2.mass);
 	}
     }
 }
 
-function getCollisionAdjustment(p1, p2) {
+//This is the velocity added to p1
+function getCollisionVelocityAdjustment(p1, p2) {
 	var angle1To2 = cartToPol({'x' : p2.x - p1.x, 'y' : p2.y - p1.y}).th;
 
-	var v_rel = polToCart({'r' : p1.v.r, 'th' : angle1To2 - p1.v.th});
+	var v1i = polToCart(pol(p1.v.r, - angle1To2 + p1.v.th));
+	if (v1i.x < 0) v1i.x = 0;
 
-	//We need to transfer any current acceleration into the other player into them as well
-	var a_rel = polToCart({'r' : p1.a.r, 'th' : angle1To2 - p1.a.th});
+	var v2i = polToCart(pol(p2.v.r,- angle1To2 + p2.v.th));
+	if (v2i.x > 0) v2i.x = 0;
 
-	var r = v_rel.x > 0 ? v_rel.x : 0;
-	r += a_rel.x > 0 ? a_rel.x : 0;
+	var v1fx = (p1.mass * v1i.x + p2.mass * v2i.x + p2.mass*(v2i.x - v1i.x)) / (p1.mass + p2.mass);
 
-	return {'r' : r, 'th' : angle1To2};
+	return pol(- v1i.x + v1fx, angle1To2);
+};
+
+function getCollisionAdjustment(p1, p2) {
+    var angle1To2 = cartToPol({'x' : p2.x - p1.x, 'y' : p2.y - p1.y}).th;
+
+    //We need to transfer any current acceleration into the other player into them as well
+    var a_rel = polToCart(pol(p1.a.r, angle1To2 - p1.a.th));
+    
+    var r = a_rel.x > 0 ? a_rel.x : 0;
+    
+    return pol(r, angle1To2);
 }
 
 function updateVelocity(p) {

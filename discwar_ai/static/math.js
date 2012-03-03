@@ -26,6 +26,19 @@ function polToCart(p) {
 	return {'x' : x, 'y' : y};
 }
 
+function pol(r, th) {
+    var p = {'r' : r, 'th' : th};
+    if (r < 0) {
+	p.r = -p.r;
+	p.th += Math.PI;
+    }
+
+    if (p.th > 2 * Math.PI) p.th -= 2 * Math.PI;
+    if (p.th < -2 * Math.PI) p.th += 2 * Math.PI;
+    
+    return p;
+}
+
 function addPolarVectors(p1, p2, weight) {
 	var one = polToCart(p1);
 	var two = polToCart(p2);

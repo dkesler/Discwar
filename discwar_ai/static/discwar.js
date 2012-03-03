@@ -20,7 +20,7 @@ function drawFrame() {
     
     for (n in collidableObjects) {
 	for (n2 in collidableObjects) {
-	    if (n != n2) checkForCollisions(collidableObjects[n], collidableObjects[n2]);
+	    if (n < n2) checkForCollisions(collidableObjects[n], collidableObjects[n2]);
 	}
     }
     
@@ -87,7 +87,7 @@ function initCollidableObject() {
 	return {
 		'radius' : settings.objectRadius,
 		'type' : straight ? 'straight' : 'spiral',
-		'mass' : 1,
+		'mass' : .5,
 		'x' : settings.maxWidth/2 + 1,
 		'y' : settings.maxHeight/2 + 1,
 		'color' : 'rgb(227,200,25)',
