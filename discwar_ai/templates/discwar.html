@@ -42,8 +42,8 @@
 			$("#player1Type").attr("disabled", true);
 			$("#player1Server").attr("disabled", true);
 			collidableObjects = [];
-			var p1 = {'type' : 'player0', 'mass' : 1, 'radius' : settings.playerRadius, 'x' : settings.maxWidth/2 + 100, 'y' : settings.maxHeight/2 + 100, 'color' : 'rgb(227,25,25)', 'maxAcc' : 1, 'maxVel' : settings.maxVel, 'v' : {'r' : 0, 'th' : 0}, 'a' : {'r' : 0, 'th' : 0}};
-			var p2 = {'type' : 'player1', 'mass' : 1, 'radius' : settings.playerRadius, 'x' : settings.maxWidth/2 - 100, 'y' : settings.maxHeight/2 - 100, 'color' : 'rgb(24,17,168)', 'maxAcc' : 1, 'maxVel' : settings.maxVel, 'v' : {'r' : 0, 'th' : 0}, 'a' : {'r' : 0, 'th' : 0}};
+			var p1 = {'type' : 'player0', 'mass' : settings.defaultPlayerMass, 'radius' : settings.playerRadius, 'x' : settings.maxWidth/2 + 100, 'y' : settings.maxHeight/2 + 100, 'color' : 'rgb(227,25,25)', 'maxAcc' : settings.defaultPlayerMaxAcc, 'maxVel' : settings.maxVel, 'v' : {'r' : 0, 'th' : 0}, 'a' : {'r' : 0, 'th' : 0}};
+			var p2 = {'type' : 'player1', 'mass' : settings.defaultPlayerMass, 'radius' : settings.playerRadius, 'x' : settings.maxWidth/2 - 100, 'y' : settings.maxHeight/2 - 100, 'color' : 'rgb(24,17,168)', 'maxAcc' : settings.defaultPlayerMaxAcc, 'maxVel' : settings.maxVel, 'v' : {'r' : 0, 'th' : 0}, 'a' : {'r' : 0, 'th' : 0}};
 			p1.accelMethod = getAccelMethod(p1);
 			p2.accelMethod = getAccelMethod(p2);
 			p1.img = getImg(p1);
@@ -62,39 +62,45 @@
 </head>
 
 <body>
-	<canvas id="game" width="800" height="800" >
-		Fallback
-	</canvas>
-	<br />
+  <div>
+    <div style="float:left">
+      <canvas id="game" width="800" height="800" >
+	Fallback
+      </canvas>
+    </div>
+    <div>
+      <div id="settings"></div>
+      
+      <label for="player0Type">Player 1:</label>
+      <select id="player0Type">
+	<option value="Manual">Manual - WASD to move, F to stop</option>
+	<option value="AggressiveJS">Aggressive Javascript</option>
+	<option value="DodgerJS">Dodger Javascript</option>
+	<option value="CenterJS">Center Holder Javascript</option>
+	<option value="ServerAi">Server Ai</option>
+      </select>
+      <select id="player0Img">
+      </select>
+      <input id="player0Server" value="http://localhost:8000/discwar/aggressive" style="width:300px"></input>
+      <br />
 
-	<label for="player0Type">Player 1:</label>
-	<select id="player0Type">
-		<option value="Manual">Manual - WASD to move, F to stop</option>
-		<option value="AggressiveJS">Aggressive Javascript</option>
-		<option value="DodgerJS">Dodger Javascript</option>
-		<option value="CenterJS">Center Holder Javascript</option>
-		<option value="ServerAi">Server Ai</option>
-	</select>
-	<select id="player0Img">
-	</select>
-	<input id="player0Server" value="http://localhost:8000/discwar/aggressive" style="width:400px"></input>
-	<br />
+      <label for="player1Type">Player 2:</label>
+      <select id="player1Type">
+	<option value="Manual">Manual - Arrow Keys to move, M to stop</option>
+	<option value="AggressiveJS">Aggressive Javascript</option>
+	<option value="DodgerJS">Dodger Javascript</option>
+	<option value="CenterJS">Center Holder Javascript</option>
+	<option value="ServerAi">Server Ai</option>
+      </select>
+      <select id="player1Img">
+      </select>
+      <input id="player1Server" value="http://localhost:8000/discwar/aggressive" style="width:300px"></input>
+      <br />
 
-	<label for="player1Type">Player 2:</label>
-	<select id="player1Type">
-		<option value="Manual">Manual - Arrow Keys to move, M to stop</option>
-		<option value="AggressiveJS">Aggressive Javascript</option>
-		<option value="DodgerJS">Dodger Javascript</option>
-		<option value="CenterJS">Center Holder Javascript</option>
-		<option value="ServerAi">Server Ai</option>
-	</select>
-	<select id="player1Img">
-	</select>
-	<input id="player1Server" value="http://localhost:8000/discwar/aggressive" style="width:400px"></input>
-	<br />
-
-	<button id="start">Start</button>
-	<button id="end">Stop</button>
+      <button id="start">Start</button>
+      <button id="end">Stop</button>
+    </div>
+  </div>
 
 	<script type="text/javascript">
 	  
@@ -103,7 +109,8 @@
 	          select.append("<option value='" + img + "'>" + img + "</option>");
 	      }
           }
-
+	  
+	  
 	  $(document).ready(
 	  new function() {
 	  init();
@@ -117,6 +124,8 @@
 	  setAvatars($("#player1Img"));
 	  
 	  loadImages();
+
+	  loadSettings();
 	  
 	  $("#start").click(
 	  function() {

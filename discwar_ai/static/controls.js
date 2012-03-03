@@ -20,7 +20,7 @@ function updateAccelerationFromKeys(player, all) {
 	var playerKeys = keys[player.type];
 	if (playerKeys.s) {
 		var v = polToCart(player.v);
-		var a = {'x' : -v.x/settings.accelFactor, 'y' : -v.y/settings.accelFactor};
+		var a = {'x' : -v.x, 'y' : -v.y};
 		player.a = cartToPol(a);
 		if (player.a.r > player.maxAcc) player.a.r = player.maxAcc;
 	} else {

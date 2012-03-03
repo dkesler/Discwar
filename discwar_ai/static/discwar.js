@@ -68,12 +68,12 @@ function addAndRemovePowerups() {
     for (p in powerups) {
 	if (powerups[p].takenBy !== undefined) {
 	    var affectedPlayer = collidableObjects.filter(filterByType(powerups[p].takenBy))[0];
-	    affectedPlayer.mass += .2;
-	    affectedPlayer.maxAcc += .2;
+	    affectedPlayer.mass += settings.powerupMassAdjustment;
+	    affectedPlayer.maxAcc += settings.powerupMaxAccAdjustment;
 	}
     }
 
-    if (powerups.length < 2 && framesSinceGeneration == 60) {
+    if (powerups.length < settings.maxPowerups && framesSinceGeneration == 60) {
 	collidableObjects.push(initPowerup());
     }
 
@@ -90,7 +90,7 @@ function initCollidableObject() {
 	return {
 		'radius' : settings.objectRadius,
 		'type' : straight ? 'straight' : 'spiral',
-		'mass' : .5,
+		'mass' : settings.neutralObjectMass,
 		'x' : settings.maxWidth/2 + 1,
 		'y' : settings.maxHeight/2 + 1,
 		'color' : 'rgb(227,200,25)',
