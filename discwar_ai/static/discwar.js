@@ -87,7 +87,7 @@ function initCollidableObject() {
 	return {
 		'radius' : settings.objectRadius,
 		'type' : straight ? 'straight' : 'spiral',
-		'mass' : 2,
+		'mass' : 1,
 		'x' : settings.maxWidth/2 + 1,
 		'y' : settings.maxHeight/2 + 1,
 		'color' : 'rgb(227,200,25)',

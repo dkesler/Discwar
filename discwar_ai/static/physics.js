@@ -10,7 +10,7 @@ function capAcceleration(p) {
 	    //if the acceleration is above maxAcc, it will allow us to exceed maxVel in the
 	    //next step
 	    var maxAcc = (p.maxVel - p.v.r) / settings.accelFactor;
-	    if (a_proj_v.x > maxAcc) a_proj_v.x = maxAcc;
+	    if (maxAcc > 0 && a_proj_v.x > maxAcc) a_proj_v.x = maxAcc;
 	}
 
 	a_proj_v = cartToPol(a_proj_v);
