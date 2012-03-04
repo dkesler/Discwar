@@ -13,6 +13,8 @@ function capAcceleration(p) {
 	    if (maxAcc > 0 && a_proj_v.x > maxAcc) a_proj_v.x = maxAcc;
 	}
 
+	if (a_proj_v.y > p.maxVel) a_proj_v.y = p.maxVel;
+
 	a_proj_v = cartToPol(a_proj_v);
 	var new_a = pol(a_proj_v.r, a_proj_v.th + p.v.th);
 	p.a = new_a;
@@ -72,10 +74,13 @@ function updateVelocity(p) {
 	var a = polToCart(p.a);
 	var v = polToCart(p.v);
 
+	var maxV = p.v.r > p.maxVel ? p.v.r : p.maxVel;
+
 	v.x += a.x;
 	v.y +=  a.y;
 
 	p.v = cartToPol(v);
+	if (p.v.r > maxV) p.v.r = maxV;
 }
 
 function moveObject(p) {

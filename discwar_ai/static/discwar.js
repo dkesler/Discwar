@@ -55,14 +55,15 @@ function drawFrame() {
 var framesSinceGeneration = 0;
 function addAndRemoveCollidableObjects() {
     collidableObjects = collidableObjects.filter(filterCollidableObjects);
-    if (framesSinceGeneration > 120) {
+    if (framesSinceGeneration > settings.minFramesPerObject && Math.random() < framesSinceGeneration / settings.maxFramesPerObject) {
 	collidableObjects.push(initCollidableObject());
-	framesSinceGeneration = 0;
+        framesSinceGeneration = 0;
     } else {
 	framesSinceGeneration += 1;
     }
 }
 
+var framesSinceLastPowerup = 0;
 function addAndRemovePowerups() {
     var powerups = collidableObjects.filter(filterByType('powerup'));
     for (p in powerups) {
@@ -72,10 +73,15 @@ function addAndRemovePowerups() {
 	    affectedPlayer.maxAcc += settings.powerupMaxAccAdjustment;
 	}
     }
-
-    if (powerups.length < settings.maxPowerups && framesSinceGeneration == 60) {
+    
+    if (powerups.length < settings.maxPowerups && framesSinceLastPowerup > settings.minFramesPerPowerup && Math.random() < framesSinceLastPowerup / settings.maxFramesPerPowerup) {
 	collidableObjects.push(initPowerup());
+        framesSinceLastPowerup = 0;
+    } else {
+        framesSinceLastPowerup += 1;
     }
+
+
 
     collidableObjects = collidableObjects.filter(filterOutTakenPowerups);
 }

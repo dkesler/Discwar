@@ -10,7 +10,11 @@ var settings = {
     "maxPowerups" : 2,
     "defaultPlayerMass" : 1,
     "defaultPlayerMaxAcc" : 0.5,
-    "neutralObjectMass" : 1
+    "neutralObjectMass" : 0.5,
+    "minFramesPerObject" : 60,
+    "maxFramesPerObject" : 5000,
+    "minFramesPerPowerup" : 60,
+    "maxFramesPerPowerup" : 5000
 };
 
 function loadSettings() {
