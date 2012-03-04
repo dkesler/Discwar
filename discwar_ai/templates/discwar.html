@@ -20,6 +20,8 @@
 	      running = false;
 	      $("#player0Type").attr("disabled", false);
 	      $("#player1Type").attr("disabled", false);
+	      $("#player0Img").attr("disabled", false);
+	      $("#player1Img").attr("disabled", false);
 	      $("#player0Server").attr("disabled", false);
 	      $("#player1Server").attr("disabled", false);
 	  }
@@ -39,6 +41,8 @@
 
 			$("#player0Type").attr("disabled", true);
 			$("#player0Server").attr("disabled", true);
+	                $("#player0Img").attr("disabled", true);
+	                $("#player1Img").attr("disabled", true);
 			$("#player1Type").attr("disabled", true);
 			$("#player1Server").attr("disabled", true);
 			collidableObjects = [];
@@ -81,7 +85,7 @@
       </select>
       <select id="player0Img">
       </select>
-      <input id="player0Server" value="http://localhost:8000/discwar/aggressive" style="width:300px"></input>
+      <input id="player0Server" value="http://localhost:8000/discwar/aggressive" style="width:300px; display:none"></input>
       <br />
 
       <label for="player1Type">Player 2:</label>
@@ -94,7 +98,7 @@
       </select>
       <select id="player1Img">
       </select>
-      <input id="player1Server" value="http://localhost:8000/discwar/aggressive" style="width:300px"></input>
+      <input id="player1Server" value="http://localhost:8000/discwar/aggressive" style="width:300px; display:none"></input>
       <br />
 
       <button id="start">Start</button>
@@ -108,7 +112,16 @@
               for (img in images) {
 	          select.append("<option value='" + img + "'>" + img + "</option>");
 	      }
-          }
+          };
+	  
+	  function showOrHideServer(e) {
+	      var player = $(this).attr("id").substring(0, 7);
+	      if ($(this).val() == "ServerAi") {
+	          $("#" + player + "Server").show();
+	      } else {
+	          $("#" + player + "Server").hide();
+	      }
+	  };
 	  
 	  
 	  $(document).ready(
@@ -122,6 +135,9 @@
 
 	  setAvatars($("#player0Img"));
 	  setAvatars($("#player1Img"));
+
+	  $("#player0Type").change(showOrHideServer);
+	  $("#player1Type").change(showOrHideServer);
 	  
 	  loadImages();
 
