@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
     url(r'^discwar/aggressive$', 'discwar_ai.views.aggressive', name='game'),
+    url(r'^discwar/pusherrobot$', 'discwar_ai.views.pusher_robot', name='game'),
     url(r'^discwar$', 'discwar_ai.views.loadGame')
 )
 
