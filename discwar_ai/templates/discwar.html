@@ -32,8 +32,8 @@
 
 	  function onGameStart() {
 			collidableObjects = [];
-	                outstanding.player0 = false;
-	                outstanding.player1 = false;
+	                outstanding.player0 = null;
+	                outstanding.player1 = null;
 			keys = {
 				'player0' : {'u' : false, 'd' : false, 'r' : false, 'l' : false, 's' : false},
 				'player1' : {'u' : false, 'd' : false, 'r' : false, 'l' : false, 's' : false}
@@ -86,7 +86,11 @@
       </select>
       <select id="player0Img">
       </select>
-      <input id="player0Server" value="http://localhost:8000/discwar/aggressive" style="width:300px; display:none"></input>
+      <div id="player0ServerDetails" style="display:none">
+	<span>Server:</span><input id="player0Server" value="http://localhost:8000/discwar/aggressive" style="width:300px"></input>
+	<span>Avg (ms):</span><span id="player0LastResp">0</span>
+	<span>Max (ms):</span><span id="player0MaxResp">0</span>
+      </div>
       <br />
 
       <label for="player1Type">Player 2:</label>
@@ -99,7 +103,11 @@
       </select>
       <select id="player1Img">
       </select>
-      <input id="player1Server" value="http://localhost:8000/discwar/aggressive" style="width:300px; display:none"></input>
+      <div id="player1ServerDetails" style="display:none"> 
+	<span>Server:</span><input id="player1Server" value="http://localhost:8000/discwar/aggressive" style="width:300px"></input>
+	<span>Avg (ms):</span><span id="player1LastResp">0</span>
+	<span>Max (ms):</span><span id="player1MaxResp">0</span>
+      </div>
       <br />
 
       <button id="start">Start</button>
@@ -118,9 +126,9 @@
 	  function showOrHideServer(e) {
 	      var player = $(this).attr("id").substring(0, 7);
 	      if ($(this).val() == "ServerAi") {
-	          $("#" + player + "Server").show();
+	          $("#" + player + "ServerDetails").show();
 	      } else {
-	          $("#" + player + "Server").hide();
+	          $("#" + player + "ServerDetails").hide();
 	      }
 	  };
 	  

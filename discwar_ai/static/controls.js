@@ -138,17 +138,23 @@ function spiralAccel(p1, all) {
 	p1.a = a;
 }
 
-var outstanding = {'player0' : false, 'player1' : false};
+var outstanding = {'player0' : null, 'player1' : null};
+var maxRespTime = {'player0' : 0, 'player1' : 0};
 function serverAi(me, all) {
-    if (!outstanding[me.type]) {
-	outstanding[me.type] = true;
+    if (outstanding[me.type] == null) {
+	outstanding[me.type] = new Date();
 	$.ajax({
 		type: 'POST',
 		url:  $("#" + me.type + "Server").val(),
 		data: JSON.stringify({'me' : me, 'all' : all, 'settings' : settings}),
 		success : function(data) {
 		    me.a = data;
-		    outstanding[me.type] = false;
+		    var responseTime = new Date().getTime() - outstanding[me.type].getTime();
+		    var current = parseInt($("#" + me.type + "LastResp").html());
+		    $("#" + me.type + "LastResp").html((responseTime + current) / 2);
+		    if (responseTime > maxRespTime[me.type]) maxRespTime[me.type] = responseTime;		    
+		    $("#" + me.type + "MaxResp").html(maxRespTime[me.type]);
+		    outstanding[me.type] = null;		    
 		},
 		dataType : "json"
 	});
