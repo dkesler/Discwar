@@ -9,7 +9,7 @@ var settings = {
     "powerupMaxAccAdjustment" : .1,
     "maxPowerups" : 2,
     "defaultPlayerMass" : 1,
-    "defaultPlayerMaxAcc" : 0.5,
+    "defaultPlayerMaxAcc" : 0.8,
     "neutralObjectMass" : 0.5,
     "minFramesPerObject" : 60,
     "maxFramesPerObject" : 5000,

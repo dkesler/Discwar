@@ -30,7 +30,7 @@
 	      return $("#" + p.type + "Img").val();
 	  }
 
-		function onGameStart() {
+	  function onGameStart() {
 			collidableObjects = [];
 	                outstanding.player0 = false;
 	                outstanding.player1 = false;
@@ -56,6 +56,7 @@
 			collidableObjects.push(p2);
 			running = true;
 			requestAnimFrame(drawFrame);
+	                window.setTimeout(incrementTime, 16);
 		}
 
 	</script>

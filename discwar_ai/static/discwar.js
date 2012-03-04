@@ -11,7 +11,7 @@ var requestAnimFrame = window.requestAnimationFrame       ||
         window.setTimeout(callback, 16);
 };
 
-function drawFrame() {
+function incrementTime() {
     
     for (n in collidableObjects) {
 	capAcceleration(collidableObjects[n]);
@@ -30,10 +30,22 @@ function drawFrame() {
     
     
     checkForGameEnd();
-    
+
     if (running) {
 	addAndRemovePowerups();
 	addAndRemoveCollidableObjects();
+	
+	for (n in collidableObjects) {
+	    collidableObjects[n].accelMethod(collidableObjects[n], collidableObjects);
+	}
+	
+	window.setTimeout(incrementTime, 16);
+    }
+}
+
+function drawFrame() {
+    
+    if (running) {
 	
 	ctx.clearRect(0, 0, settings.maxWidth, settings.maxHeight);
 	
@@ -41,10 +53,6 @@ function drawFrame() {
 	
 	for (n in collidableObjects) {
 	    drawObject(collidableObjects[n]);
-	}
-
-	for (n in collidableObjects) {
-	    collidableObjects[n].accelMethod(collidableObjects[n], collidableObjects);
 	}
 	
 	requestAnimFrame(drawFrame);
