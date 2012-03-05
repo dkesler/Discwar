@@ -141,12 +141,14 @@ function checkForGameEnd() {
 	var p1 = getPlayer('player0');
 	if (isOutOfBoard(p1.x, p1.y)) {
 		window.alert("Player 2 wins!");
+		$("#player1Wins").html( parseInt($("#player1Wins").html()) + 1);
 		onGameEnd();
 		return;
 	}
 
 	var p2 = getPlayer('player1');
 	if (isOutOfBoard(p2.x, p2.y)) {
+		$("#player0Wins").html( parseInt($("#player0Wins").html()) + 1);
 		window.alert("Player 1 wins!");
 		onGameEnd();
 	}
