@@ -24,8 +24,7 @@
 	      $("#player1Img").attr("disabled", false);
 	      $("#player0Server").attr("disabled", false);
 	      $("#player1Server").attr("disabled", false);
-	      $("#player0Powerups").html(0);
-	      $("#player1Powerups").html(0);
+
 	  }
 	  
 	  function getImg(p) {
@@ -47,6 +46,8 @@
 	                $("#player1Img").attr("disabled", true);
 			$("#player1Type").attr("disabled", true);
 			$("#player1Server").attr("disabled", true);
+      	                $("#player0Powerups").html(0);
+	                $("#player1Powerups").html(0);
 			collidableObjects = [];
 			var p1 = {'type' : 'player0', 'mass' : settings.defaultPlayerMass, 'radius' : settings.playerRadius, 'x' : settings.maxWidth/2 + 100, 'y' : settings.maxHeight/2 + 100, 'color' : 'rgb(227,25,25)', 'maxAcc' : settings.defaultPlayerMaxAcc, 'maxVel' : settings.maxVel, 'v' : {'r' : 0, 'th' : 0}, 'a' : {'r' : 0, 'th' : 0}};
 			var p2 = {'type' : 'player1', 'mass' : settings.defaultPlayerMass, 'radius' : settings.playerRadius, 'x' : settings.maxWidth/2 - 100, 'y' : settings.maxHeight/2 - 100, 'color' : 'rgb(24,17,168)', 'maxAcc' : settings.defaultPlayerMaxAcc, 'maxVel' : settings.maxVel, 'v' : {'r' : 0, 'th' : 0}, 'a' : {'r' : 0, 'th' : 0}};
