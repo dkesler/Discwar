@@ -79,6 +79,7 @@ function addAndRemovePowerups() {
 	    var affectedPlayer = collidableObjects.filter(filterByType(powerups[p].takenBy))[0];
 	    affectedPlayer.mass += settings.powerupMassAdjustment;
 	    affectedPlayer.maxAcc += settings.powerupMaxAccAdjustment;
+	    $("#" + affectedPlayer.type + "Powerups").html(parseInt($("#" + affectedPlayer.type + "Powerups").html()) + 1);
 	}
     }
     

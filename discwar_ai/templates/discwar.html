@@ -24,6 +24,8 @@
 	      $("#player1Img").attr("disabled", false);
 	      $("#player0Server").attr("disabled", false);
 	      $("#player1Server").attr("disabled", false);
+	      $("#player0Powerups").html(0);
+	      $("#player1Powerups").html(0);
 	  }
 	  
 	  function getImg(p) {
@@ -77,15 +79,18 @@
       <div id="settings"></div>
       
       <label for="player0Type">Player 1:</label>
-      <select id="player0Type">
-	<option value="Manual">Manual - WASD to move, F to stop</option>
-	<option value="AggressiveJS">Aggressive Javascript</option>
-	<option value="DodgerJS">Dodger Javascript</option>
-	<option value="CenterJS">Center Holder Javascript</option>
-	<option value="ServerAi">Server Ai</option>
-      </select>
-      <select id="player0Img">
-      </select>
+      <div>
+	<select id="player0Type">
+	  <option value="Manual">Manual - WASD to move, F to stop</option>
+	  <option value="AggressiveJS">Aggressive Javascript</option>
+	  <option value="DodgerJS">Dodger Javascript</option>
+	  <option value="CenterJS">Center Holder Javascript</option>
+	  <option value="ServerAi">Server Ai</option>
+	</select>
+	<select id="player0Img">
+	</select>
+      </div>
+      <div><span>Powerups:</span><span id="player0Powerups">0</span></div>
       <div id="player0ServerDetails" style="display:none">
 	<span>Server:</span><input id="player0Server" value="http://localhost:8000/discwar/aggressive" style="width:300px"></input>
 	<span>Avg (ms):</span><span id="player0LastResp">0</span>
@@ -94,15 +99,18 @@
       <br />
 
       <label for="player1Type">Player 2:</label>
-      <select id="player1Type">
-	<option value="Manual">Manual - Arrow Keys to move, M to stop</option>
-	<option value="AggressiveJS">Aggressive Javascript</option>
-	<option value="DodgerJS">Dodger Javascript</option>
-	<option value="CenterJS">Center Holder Javascript</option>
-	<option value="ServerAi">Server Ai</option>
-      </select>
-      <select id="player1Img">
-      </select>
+      <div>
+	<select id="player1Type">
+	  <option value="Manual">Manual - Arrow Keys to move, M to stop</option>
+	  <option value="AggressiveJS">Aggressive Javascript</option>
+	  <option value="DodgerJS">Dodger Javascript</option>
+	  <option value="CenterJS">Center Holder Javascript</option>
+	  <option value="ServerAi">Server Ai</option>
+	</select>
+	<select id="player1Img">
+	</select>
+      </div>
+      <div><span>Powerups:</span><span id="player1Powerups">0</span></div>
       <div id="player1ServerDetails" style="display:none"> 
 	<span>Server:</span><input id="player1Server" value="http://localhost:8000/discwar/aggressive" style="width:300px"></input>
 	<span>Avg (ms):</span><span id="player1LastResp">0</span>

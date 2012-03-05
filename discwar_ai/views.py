@@ -50,15 +50,19 @@ def pusher_robot(request):
 		powerups = getByType(all, 'powerup')
 		them = getEnemy(me, all)
 
-		if len(powerups) > 0 and getDistFromCenter(getNearest(me, powerups), settings) < settings['boardRadius'] - 1.3 * settings['playerRadius'] and me['mass'] < them['mass'] * 2:
+		if getDistFromCenter(me, settings) > settings['boardRadius'] - 5 * settings['playerRadius'] and getDistFromCenter(me, settings) > getDistFromCenter(them, settings) and getDist(me, them) < 5 * settings['playerRadius']:
+			a = panic(me, all, settings)
+		elif len(powerups) > 0 and getDistFromCenter(getNearest(me, powerups), settings) < settings['boardRadius'] - 1.3 * settings['playerRadius'] and me['mass'] < them['mass'] * 2:
 			a = goForPowerup(me, all, settings)
-		elif me['mass'] < them['mass'] or (getDistFromCenter(me, settings) > settings['boardRadius'] - 5 * settings['playerRadius'] and getDistFromCenter(me, settings) > getDistFromCenter(them, settings) and getDist(me, them) < 3 * settings['playerRadius']):
+		elif me['mass'] < them['mass']:
+			a = panic(me, all, settings)
+		elif getDistFromCenter(me, settings) > getDistFromCenter(them, settings):
 			a = panic(me, all, settings)
 		elif getDist(me, them) < 6 * settings['playerRadius'] and getDist(me, getCenterAsObj(settings)) > 3 * settings['playerRadius']:
 			a  = zone(me, all, settings)
 		else:
 			a = goForEnemy(me, all, settings)
-
+			
 		response = HttpResponse(json.dumps(a), mimetype="application/javascript)")
 	except Exception as e:
 		traceback.print_exc()
@@ -71,12 +75,23 @@ def pusher_robot(request):
 def panic(me, all, settings):
 	towardsEnemy = getTowardsEnemy(me, all)
 	towardsCenter = getTowards(me, getCenterAsObj(settings))
+
+	#If the enemy and center aren't even close, just go towards the center
+	diff = math.fabs(towardsEnemy.th - towardsCenter.th)
+	if diff >= math.pi/2:
+		return goForTarget(me, getCenterAsObj(settings))
+
+
+	#if the enemy and center are close, favor the side closer to the center
 	sideToFavor = math.copysign(1, towardsCenter.th - towardsEnemy.th)
-	orthogonal = towardsEnemy.th + sideToFavor * math.pi/4
-	if (orthogonal > 2*math.pi):
-		orthogonal -= 2*math.pi
+	dirToGo = towardsEnemy.th + sideToFavor * math.pi / 4
+
+	if (dirToGo > 2*math.pi):
+		dirToGo -= 2*math.pi
+	if dirToGo < 0:
+		dirToGo += 2 * math.pi
 	
-	return {'r' : me['maxAcc'], 'th' : orthogonal}
+	return {'r' : me['maxAcc'], 'th' : dirToGo}
 
 def getCenterAsObj(settings):
 	return {'x' : settings['maxWidth'] / 2, 'y' : settings['maxHeight'] / 2}
@@ -98,7 +113,6 @@ def getTowards(me, it):
 def goForPowerup(me, all, settings):
 	powerups = getByType(all, 'powerup');
 	if len(powerups) == 0:
-		print 'how tf did i get here?'
 		return None
 
 	nearestPowerup = getNearest(me, powerups)
@@ -196,6 +210,8 @@ def cartToPol(c):
 		
 	if th > 2 * math.pi:
 		th -= 2 * math.pi;
+	if th < 0:
+		th += 2 * math.pi;
 		
 	return pol(r, th)
 	
