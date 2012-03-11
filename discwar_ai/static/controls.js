@@ -96,7 +96,7 @@ function handleKeyup(event) {
 function aggressiveAi(me, all) {
 	var p2 = getOtherPlayer(me, all);
 	var towardsEnemy = cartToPol({'x' : p2.x - me.x, 'y' : p2.y - me.y}).th;
-	me.a =  {'r' : 1, 'th' : towardsEnemy - Math.PI/10 + Math.random()*Math.PI/5};
+	me.a =  {'r' : me.maxAcc, 'th' : towardsEnemy - Math.PI/10 + Math.random()*Math.PI/5};
 }
 
 function dodgerAi(me, all) {
@@ -110,14 +110,14 @@ function dodgerAi(me, all) {
 	    if (sideToFavor == 0) sideToFavor = 1;
 	    var orthogonal = towardsEnemy.th + sideToFavor * Math.PI/2;
 	    if (orthogonal > 2*Math.PI) orthogonal -= 2*Math.PI;
-	    me.a = {'r' : 1, 'th' : orthogonal - Math.PI/10 + Math.random()*Math.PI/5};
+	    me.a = {'r' : me.maxAcc, 'th' : orthogonal - Math.PI/10 + Math.random()*Math.PI/5};
 	}
 }
 
 function centerAi(me, all) {
 	var p2 = getOtherPlayer(me, all);
 	var towardsCenter = cartToPol({'x' : me.x - settings.maxWidth/2, 'y' : me.y - settings.maxWidth/2}).th;
-	me.a = {'r' : -1, 'th' : towardsCenter};
+	me.a = {'r' : -me.maxAcc, 'th' : towardsCenter};
 }
 
 function straightAccel(p1, all) {
