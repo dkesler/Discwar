@@ -11,8 +11,12 @@ var requestAnimFrame = window.requestAnimationFrame       ||
         window.setTimeout(callback, 16);
 };
 
+var totalRunTime = 0;
 function incrementTime() {
-    
+
+    totalRunTime += 16;    
+    $("#runTime").html(totalRunTime/1000);
+
     for (n in collidableObjects) {
 	capAcceleration(collidableObjects[n]);
     }
@@ -151,5 +155,10 @@ function checkForGameEnd() {
 		$("#player0Wins").html( parseInt($("#player0Wins").html()) + 1);
 		window.alert("Player 1 wins!");
 		onGameEnd();
+	}
+
+	if (totalRunTime/1000 > settings.maxGameTimeSeconds) {
+	    window.alert("Draw.  Players are out of time.");
+	    onGameEnd();
 	}
 }

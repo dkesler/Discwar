@@ -33,6 +33,8 @@
 
 	  function onGameStart() {
 			collidableObjects = [];
+	                totalRunTime = 0;
+	                $("#runTime").html(0);
 	                outstanding.player0 = null;
 	                outstanding.player1 = null;
 			keys = {
@@ -72,9 +74,15 @@
 <body>
   <div>
     <div style="float:left">
-      <canvas id="game" width="800" height="800" >
-	Fallback
-      </canvas>
+      <div>
+	<canvas id="game" width="800" height="800" >
+	  Fallback
+	</canvas>
+      </div>
+      <div>
+	<span>Game Time:</span>
+	<span id="runTime">0</span>
+      </div>
     </div>
     <div>
       <div id="settings"></div>
