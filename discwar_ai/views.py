@@ -40,6 +40,26 @@ def aggressive(request):
 		return response
 
 @csrf_exempt
+def zoner_robot(request):
+	try:
+		json_data = json.loads(request.raw_post_data)
+	
+		me = json_data['me']
+		all = json_data['all']
+		settings = json_data['settings']
+		powerups = getByType(all, 'powerup')
+		them = getEnemy(me, all)
+		a = zone(me, all, settings)
+		response = HttpResponse(json.dumps(a), mimetype="application/javascript)")
+	except Exception as e:
+		traceback.print_exc()
+		print e
+	else:
+		response['Access-Control-Allow-Origin'] = '*'
+		response['Access-Control-Allow-Methods'] = 'POST'
+		return response
+
+@csrf_exempt
 def pusher_robot(request):
 	try:
 		json_data = json.loads(request.raw_post_data)
@@ -50,7 +70,7 @@ def pusher_robot(request):
 		powerups = getByType(all, 'powerup')
 		them = getEnemy(me, all)
 
-		if getDistFromCenter(me, settings) > settings['boardRadius'] - 5 * settings['playerRadius'] and getDistFromCenter(me, settings) > getDistFromCenter(them, settings) and getDist(me, them) < 5 * settings['playerRadius']:
+		if getDistFromCenter(me, settings) > settings['boardRadius'] - 3 * settings['playerRadius'] and getDistFromCenter(me, settings) > getDistFromCenter(them, settings) and getDist(me, them) < 3 * settings['playerRadius']:
 			a = panic(me, all, settings)
 		elif len(powerups) > 0 and getDistFromCenter(getNearest(me, powerups), settings) < settings['boardRadius'] - 1.3 * settings['playerRadius'] and me['mass'] < them['mass'] * 2:
 			a = goForPowerup(me, all, settings)
@@ -58,7 +78,7 @@ def pusher_robot(request):
 			a = panic(me, all, settings)
 		elif getDistFromCenter(me, settings) > getDistFromCenter(them, settings):
 			a = panic(me, all, settings)
-		elif getDist(me, them) < 6 * settings['playerRadius'] and getDist(me, getCenterAsObj(settings)) > 3 * settings['playerRadius']:
+		elif getDist(me, them) < 6 * settings['playerRadius'] and getDist(them, getCenterAsObj(settings)) > 3 * settings['playerRadius']:
 			a  = zone(me, all, settings)
 		else:
 			a = goForEnemy(me, all, settings)
@@ -127,7 +147,7 @@ def goForTarget(me, target):
 	new = cartToPol(cart(x, y))
 	return {'r' : new.r, 'th' : new.th + towardsTarget.th}
 
-def getRemainingAcc(r, y):
+def getRemaining(r, y):
 	if math.fabs(y) > math.fabs(r) :
 		return 0
 	return math.sqrt(r*r - y*y) 
@@ -140,32 +160,48 @@ def goForEnemy(me, all, settings):
 	new = cartToPol(cart(x, y))
 	return {'r' : new.r, 'th' : new.th + towardsEnemy.th}
 
-def getPositionInBasis(cart, basis):
+def getCartInBasis(cart, basis):
 	posPol = cartToPol(cart)
 	posPol.th -= basis.th
 	return polToCart(posPol)
 	
 def zone(me, all, settings):
 	them = getEnemy(me, all)
+	my_v_obj = polToCart(pol(me['v']['r'], me['v']['th']));
 	theirV = polToCart(pol(them['v']['r'], them['v']['th']))
 	theirA = polToCart(pol(them['a']['r'], them['a']['th']))
-	them['x'] = them['x'] + theirV.x + theirA.x
-	them['y'] = them['y'] + theirV.y + theirA.y
+	them['x'] = them['x'] + theirV.x
+	them['y'] = them['y'] + theirV.y
 
 	towardsEnemy = getTowardsEnemy(me, all)
 	centerToEnemy = getTowards(getCenterAsObj(settings), them)
 
-	myPos = getPositionInBasis(cart(me['x'] - settings['maxWidth']/2, me['y'] - settings['maxHeight'] / 2), centerToEnemy);
-	theirPos = getPositionInBasis(cart(them['x'] - settings['maxWidth']/2, them['y'] - settings['maxHeight'] / 2), centerToEnemy);
+	myPos = getCartInBasis(cart(me['x'] - settings['maxWidth']/2, me['y'] - settings['maxHeight'] / 2), centerToEnemy);
+	print "My pos in basis: %d, %d" % (myPos.x, myPos.y)
+	myV = getCartInBasis(my_v_obj, centerToEnemy);
+	print "My v in basis: %f, %f" % (myV.x, myV.y)
+	theirPos = getCartInBasis(cart(them['x'] - settings['maxWidth']/2, them['y'] - settings['maxHeight'] / 2), centerToEnemy);
+	print "Their pos in basis: %d, %d" % (theirPos.x, theirPos.y)
 
 	x = math.copysign(me['maxAcc'], - myPos.x + theirPos.x)
-	y = -myPos.y
-	#x = math.copysign(getRemainingAcc(me['maxAcc'], y), - myPos.x + theirPos.x)
+	if myV.x < 0:
+		desired_x_velocity = me['maxVel']
+		desired_y_velocity = myV.y;
+	else:
+		desired_y_velocity = -myPos.y
+		desired_x_velocity = math.copysign(getRemaining(me['maxVel'], desired_y_velocity), - myPos.x + theirPos.x)
+	
+	print "desired v in basis: %f, %f" % (desired_x_velocity, desired_y_velocity)
 
-	new = cartToPol(cart(x, y))
+	desired_y_acc = desired_y_velocity - myV.y;
+	desired_x_acc = desired_x_velocity - myV.x;
+
+	print "desired a in basis: %f, %f" % (desired_x_acc, desired_y_acc)
+
+	new = cartToPol(cart(desired_x_acc, desired_y_acc))
 
 	return {'r' : new.r, 'th' : new.th + centerToEnemy.th}
-	
+
 
 def getNearest(me, others):
 	minDist = 9999999

@@ -18,10 +18,18 @@ function drawObject(player) {
 }
 
 function drawBoard() {
-	ctx.beginPath();
-	ctx.fillStyle = "rgb(0,0,0)";
-	ctx.arc(settings.maxWidth/2, settings.maxHeight/2, settings.boardRadius, 0, 2*Math.PI, true);
-	ctx.fill();
+    ctx.beginPath();
+    ctx.fillStyle = "rgb(0,0,0)";
+    ctx.arc(settings.maxWidth/2, settings.maxHeight/2, settings.boardRadius, 0, 2*Math.PI, true);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.fillStyle = "rgb(128,128,128)";
+    ctx.arc(settings.maxWidth/2, settings.maxHeight/2, 5, 0, 2*Math.PI, true);
+    ctx.fill();
+
+
+
 }
 
 function loadImages() {
