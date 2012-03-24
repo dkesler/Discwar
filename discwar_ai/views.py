@@ -98,12 +98,20 @@ def panic(me, all, settings):
 
 	#If the enemy and center aren't even close, just go towards the center
 	diff = math.fabs(towardsEnemy.th - towardsCenter.th)
-	if diff >= math.pi/2:
+	if diff >= math.pi/2 and diff <= 3*math.pi/2:
+		print "Difference between center and enemy %f, going directly for center" % diff
 		return goForTarget(me, getCenterAsObj(settings))
+	print "Difference between center and enemy %f, dodging" % diff
 
 
 	#if the enemy and center are close, favor the side closer to the center
-	sideToFavor = math.copysign(1, towardsCenter.th - towardsEnemy.th)
+	if diff <= math.pi/2:
+		sideToFavor = math.copysign(1, towardsCenter.th - towardsEnemy.th)
+	else:
+		if towardsCenter.th <= math.pi / 2:
+			sideToFavor = 1
+		else:
+			sideToFavor = -1
 	dirToGo = towardsEnemy.th + sideToFavor * math.pi / 4
 
 	if (dirToGo > 2*math.pi):
@@ -170,8 +178,8 @@ def zone(me, all, settings):
 	my_v_obj = polToCart(pol(me['v']['r'], me['v']['th']));
 	theirV = polToCart(pol(them['v']['r'], them['v']['th']))
 	theirA = polToCart(pol(them['a']['r'], them['a']['th']))
-	them['x'] = them['x'] + theirV.x
-	them['y'] = them['y'] + theirV.y
+	#them['x'] = them['x'] + theirV.x
+	#them['y'] = them['y'] + theirV.y
 
 	towardsEnemy = getTowardsEnemy(me, all)
 	centerToEnemy = getTowards(getCenterAsObj(settings), them)
@@ -184,12 +192,13 @@ def zone(me, all, settings):
 	print "Their pos in basis: %d, %d" % (theirPos.x, theirPos.y)
 
 	x = math.copysign(me['maxAcc'], - myPos.x + theirPos.x)
-	if myV.x < 0:
-		desired_x_velocity = me['maxVel']
-		desired_y_velocity = myV.y;
-	else:
-		desired_y_velocity = -myPos.y
-		desired_x_velocity = math.copysign(getRemaining(me['maxVel'], desired_y_velocity), - myPos.x + theirPos.x)
+	#if myV.x < 0:
+	#	desired_x_velocity = me['maxVel']
+	#	desired_y_velocity = myV.y;
+	#else:
+	desired_x_velocity = me['maxVel']
+	desired_y_velocity = -myPos.y
+	#desired_x_velocity = math.copysign(getRemaining(me['maxVel'], desired_y_velocity), - myPos.x + theirPos.x)
 	
 	print "desired v in basis: %f, %f" % (desired_x_velocity, desired_y_velocity)
 
