@@ -15,7 +15,8 @@ var settings = {
     "maxFramesPerObject" : 5000,
     "minFramesPerPowerup" : 60,
     "maxFramesPerPowerup" : 5000,
-    "maxGameTimeSeconds" : 120
+    "maxGameTimeSeconds" : 120,
+    "autoRun" : 0
 };
 
 function loadSettings() {
