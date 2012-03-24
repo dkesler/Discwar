@@ -18,7 +18,11 @@ class pol(object):
 	def __init__(self, r, th):
 		self.r = r
 		self.th = th
-		
+	
+	def sub(self, other):
+		self_cart = polToCart(self)
+		other_cart = polToCart(other)
+		return cartToPol(cart(self_cart.x - other_cart.x, self_cart.y - other_cart.y))
 
 @csrf_exempt
 def aggressive(request):
@@ -112,14 +116,26 @@ def panic(me, all, settings):
 			sideToFavor = 1
 		else:
 			sideToFavor = -1
+	
+	print "towards enemy: %f, side to favor : %d" % (towardsEnemy.th, sideToFavor)
 	dirToGo = towardsEnemy.th + sideToFavor * math.pi / 4
 
 	if (dirToGo > 2*math.pi):
 		dirToGo -= 2*math.pi
 	if dirToGo < 0:
 		dirToGo += 2 * math.pi
+
+	print "DirToGo: %f" % (dirToGo)
+
+	v = pol(me['v']['r'], me['v']['th'])
+	print "current v: %f, %f" % (v.r, v.th)
+	desired_v = pol(me['maxVel'] * 4, dirToGo);
+	print "desired v: %f, %f" % (desired_v.r, desired_v.th)
+	new_a = desired_v.sub(v)
 	
-	return {'r' : me['maxAcc'], 'th' : dirToGo}
+	print "accel: %f, %f" % (new_a.r, new_a.th)
+	
+	return {'r' : new_a.r, 'th' : new_a.th}
 
 def getCenterAsObj(settings):
 	return {'x' : settings['maxWidth'] / 2, 'y' : settings['maxHeight'] / 2}
@@ -185,27 +201,31 @@ def zone(me, all, settings):
 	centerToEnemy = getTowards(getCenterAsObj(settings), them)
 
 	myPos = getCartInBasis(cart(me['x'] - settings['maxWidth']/2, me['y'] - settings['maxHeight'] / 2), centerToEnemy);
-	print "My pos in basis: %d, %d" % (myPos.x, myPos.y)
+	#print "My pos in basis: %d, %d" % (myPos.x, myPos.y)
 	myV = getCartInBasis(my_v_obj, centerToEnemy);
-	print "My v in basis: %f, %f" % (myV.x, myV.y)
+	#print "My v in basis: %f, %f" % (myV.x, myV.y)
 	theirPos = getCartInBasis(cart(them['x'] - settings['maxWidth']/2, them['y'] - settings['maxHeight'] / 2), centerToEnemy);
-	print "Their pos in basis: %d, %d" % (theirPos.x, theirPos.y)
+	#print "Their pos in basis: %d, %d" % (theirPos.x, theirPos.y)
 
 	x = math.copysign(me['maxAcc'], - myPos.x + theirPos.x)
 	#if myV.x < 0:
 	#	desired_x_velocity = me['maxVel']
 	#	desired_y_velocity = myV.y;
 	#else:
-	desired_x_velocity = me['maxVel']
+
 	desired_y_velocity = -myPos.y
-	#desired_x_velocity = math.copysign(getRemaining(me['maxVel'], desired_y_velocity), - myPos.x + theirPos.x)
+
+	if (myPos.y > 30):
+		desired_x_velocity = math.copysign(getRemaining(me['maxVel'], desired_y_velocity), - myPos.x + theirPos.x)
+	else:
+		desired_x_velocity = me['maxVel']
 	
-	print "desired v in basis: %f, %f" % (desired_x_velocity, desired_y_velocity)
+	#print "desired v in basis: %f, %f" % (desired_x_velocity, desired_y_velocity)
 
 	desired_y_acc = desired_y_velocity - myV.y;
 	desired_x_acc = desired_x_velocity - myV.x;
 
-	print "desired a in basis: %f, %f" % (desired_x_acc, desired_y_acc)
+	#print "desired a in basis: %f, %f" % (desired_x_acc, desired_y_acc)
 
 	new = cartToPol(cart(desired_x_acc, desired_y_acc))
 
