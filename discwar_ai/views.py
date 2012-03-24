@@ -74,15 +74,22 @@ def pusher_robot(request):
 		powerups = getByType(all, 'powerup')
 		them = getEnemy(me, all)
 
-		if getDistFromCenter(me, settings) > settings['boardRadius'] - 3 * settings['playerRadius'] and getDistFromCenter(me, settings) > getDistFromCenter(them, settings) and getDist(me, them) < 3 * settings['playerRadius']:
+		myDistFromCenter = getDistFromCenter(me, settings)
+		theirDistFromCenter = getDistFromCenter(them, settings)
+		myDistFromThem = getDist(me, them)
+
+		if myDistFromCenter > settings['boardRadius'] - 3 * settings['playerRadius'] and myDistFromCenter > theirDistFromCenter and myDistFromThem < 3 * settings['playerRadius']:
 			a = panic(me, all, settings)
+		elif myDistFromCenter < theirDistFromCenter and theirDistFromCenter > settings['boardRadius'] - 2 * settings['playerRadius'] and myDistFromThem < 4 * settings['playerRadius']:
+			print "finish them!"
+			a = zone(me, all, settings)
 		elif len(powerups) > 0 and getDistFromCenter(getNearest(me, powerups), settings) < settings['boardRadius'] - 1.3 * settings['playerRadius'] and me['mass'] < them['mass'] * 2:
 			a = goForPowerup(me, all, settings)
 		elif me['mass'] < them['mass']:
 			a = panic(me, all, settings)
-		elif getDistFromCenter(me, settings) > getDistFromCenter(them, settings):
+		elif myDistFromCenter > theirDistFromCenter:
 			a = panic(me, all, settings)
-		elif getDist(me, them) < 6 * settings['playerRadius'] and getDist(them, getCenterAsObj(settings)) > 3 * settings['playerRadius']:
+		elif myDistFromThem < 6 * settings['playerRadius'] and theirDistFromCenter > 3 * settings['playerRadius']:
 			a  = zone(me, all, settings)
 		else:
 			a = goForEnemy(me, all, settings)
@@ -103,9 +110,9 @@ def panic(me, all, settings):
 	#If the enemy and center aren't even close, just go towards the center
 	diff = math.fabs(towardsEnemy.th - towardsCenter.th)
 	if diff >= math.pi/2 and diff <= 3*math.pi/2:
-		print "Difference between center and enemy %f, going directly for center" % diff
+		#print "Difference between center and enemy %f, going directly for center" % diff
 		return goForTarget(me, getCenterAsObj(settings))
-	print "Difference between center and enemy %f, dodging" % diff
+	#print "Difference between center and enemy %f, dodging" % diff
 
 
 	#if the enemy and center are close, favor the side closer to the center
@@ -117,7 +124,7 @@ def panic(me, all, settings):
 		else:
 			sideToFavor = -1
 	
-	print "towards enemy: %f, side to favor : %d" % (towardsEnemy.th, sideToFavor)
+	#print "towards enemy: %f, side to favor : %d" % (towardsEnemy.th, sideToFavor)
 	dirToGo = towardsEnemy.th + sideToFavor * math.pi / 4
 
 	if (dirToGo > 2*math.pi):
@@ -125,15 +132,15 @@ def panic(me, all, settings):
 	if dirToGo < 0:
 		dirToGo += 2 * math.pi
 
-	print "DirToGo: %f" % (dirToGo)
+	#print "DirToGo: %f" % (dirToGo)
 
 	v = pol(me['v']['r'], me['v']['th'])
-	print "current v: %f, %f" % (v.r, v.th)
+	#print "current v: %f, %f" % (v.r, v.th)
 	desired_v = pol(me['maxVel'] * 4, dirToGo);
-	print "desired v: %f, %f" % (desired_v.r, desired_v.th)
+	#print "desired v: %f, %f" % (desired_v.r, desired_v.th)
 	new_a = desired_v.sub(v)
 	
-	print "accel: %f, %f" % (new_a.r, new_a.th)
+	#print "accel: %f, %f" % (new_a.r, new_a.th)
 	
 	return {'r' : new_a.r, 'th' : new_a.th}
 
