@@ -84,7 +84,7 @@ def pusher_robot(request):
 			print "finish them!"
 			a = zone(me, all, settings)
 		elif willRunOff(me, settings):
-			a = dontGoOff(me, all, settings)
+			a = panic(me, all, settings)
 		elif len(powerups) > 0  and me['mass'] < them['mass'] * 2:# and getDistFromCenter(getNearest(me, powerups), settings) < settings['boardRadius'] - 1.3 * settings['playerRadius']:
 			a = goForPowerup(me, all, settings)
 		elif me['mass'] < them['mass']:
