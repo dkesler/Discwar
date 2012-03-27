@@ -126,7 +126,7 @@ function initCollidableObject() {
 
 function initPowerup() {
     var dir = Math.random() * 2 * Math.PI;
-    var dist = Math.random() * settings.boardRadius;
+    var dist = settings.boardRadius - 1;
     var pos = polToCart({'r' : dist, 'th' : dir});
     return {
 	'radius' : settings.objectRadius,

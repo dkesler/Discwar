@@ -78,12 +78,14 @@ def pusher_robot(request):
 		theirDistFromCenter = getDistFromCenter(them, settings)
 		myDistFromThem = getDist(me, them)
 
-		if myDistFromCenter > settings['boardRadius'] - 3 * settings['playerRadius'] and myDistFromCenter > theirDistFromCenter and myDistFromThem < 3 * settings['playerRadius']:
+		if myDistFromCenter > settings['boardRadius'] - 4 * settings['playerRadius'] and myDistFromCenter > theirDistFromCenter and myDistFromThem < 4 * settings['playerRadius']:
 			a = panic(me, all, settings)
 		elif myDistFromCenter < theirDistFromCenter and theirDistFromCenter > settings['boardRadius'] - 2 * settings['playerRadius'] and myDistFromThem < 4 * settings['playerRadius']:
 			print "finish them!"
 			a = zone(me, all, settings)
-		elif len(powerups) > 0 and getDistFromCenter(getNearest(me, powerups), settings) < settings['boardRadius'] - 1.3 * settings['playerRadius'] and me['mass'] < them['mass'] * 2:
+		elif willRunOff(me, settings):
+			a = dontGoOff(me, all, settings)
+		elif len(powerups) > 0  and me['mass'] < them['mass'] * 2:# and getDistFromCenter(getNearest(me, powerups), settings) < settings['boardRadius'] - 1.3 * settings['playerRadius']:
 			a = goForPowerup(me, all, settings)
 		elif me['mass'] < them['mass']:
 			a = panic(me, all, settings)
@@ -102,6 +104,30 @@ def pusher_robot(request):
 		response['Access-Control-Allow-Origin'] = '*'
 		response['Access-Control-Allow-Methods'] = 'POST'
 		return response
+
+def dontGoOff(me, all, settings):
+	towardsCenter = getTowards(me, getCenterAsObj(settings))
+	return {'r' : me['maxAcc'], 'th' : towardsCenter.th}
+
+def willRunOff(me, settings):
+	stoppingDistance = calculateStoppingDistance(me, settings)
+	distToEdge = settings['boardRadius'] - getDistFromCenter(me, settings)
+	if stoppingDistance > distToEdge - max(2 * me['v']['r'], 10):
+		return True
+	return False
+
+def calculateStoppingDistance(me, settings):
+	awayFromCenter = getTowards(getCenterAsObj(settings), me)
+	vTowardsEdge = polToCart(pol(me['v']['r'], me['v']['th'] - awayFromCenter.th)).x;
+	
+	stoppingDist = 0
+
+	while vTowardsEdge > 0:
+		stoppingDist += vTowardsEdge
+		vTowardsEdge -= me['maxAcc']
+
+	return stoppingDist
+	
 
 def panic(me, all, settings):
 	towardsEnemy = getTowardsEnemy(me, all)
